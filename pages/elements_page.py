@@ -50,5 +50,11 @@ class WebTablePage(BasePage):
         return [person_info.firstname, person_info.lastname, str(person_info.age), 
                 person_info.email, str(person_info.salary), person_info.department]
     
-    def check_added_person(self):
-        pass
+    def get_all_people(self):
+        all_people = self.elements_are_present(self.locators.FULL_PEOPLE_LIST)
+        data = []
+        
+        for person in all_people:
+            data.append(person.text.splitlines())
+
+        return data
