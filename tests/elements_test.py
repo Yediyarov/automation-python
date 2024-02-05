@@ -1,3 +1,4 @@
+import random
 from pages.elements_page import TextBoxPage, WebTablePage
 
 class TestElements:
@@ -25,3 +26,13 @@ class TestElements:
             all_people = web_table_page.get_all_people()
 
             assert new_person in all_people
+            
+        def test_web_table_search_person(self, driver):
+            web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
+            web_table_page.open()
+
+            keyword = web_table_page.add_new_person()[random.randint(0,5)]
+            web_table_page.search_person(keyword)
+            searched_person = web_table_page.get_searched_person()
+            
+            assert keyword in searched_person, "the person was not found in the table"
