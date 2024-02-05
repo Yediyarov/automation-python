@@ -1,5 +1,5 @@
 from generator.generator import generated_person
-from locators.elements_page_locators import TextBoxPageLocators
+from locators.elements_page_locators import TextBoxPageLocators, WebTablePageLocators
 from pages.base_page import BasePage
 
 class TextBoxPage(BasePage):
@@ -27,3 +27,28 @@ class TextBoxPage(BasePage):
         permanent_address = self.element_is_present(self.locators.CREATED_PERMANENT_ADDRESS).text.split(':')[1]
 
         return full_name, email, current_address, permanent_address
+
+
+class WebTablePage(BasePage):
+    locators = WebTablePageLocators()
+
+    def add_new_person(self, count=1):
+        while count != 0:
+            person_info = next(generated_person())
+            
+            self.element_is_visible(self.locators.ADD_BUTTON).click()
+            self.element_is_visible(self.locators.FIRST_NAME_INPUT).send_keys(person_info.firstname)
+            self.element_is_visible(self.locators.LAST_NAME_INPUT).send_keys(person_info.lastname)
+            self.element_is_visible(self.locators.EMAIL_INPUT).send_keys(person_info.email)
+            self.element_is_visible(self.locators.AGE_INPUT).send_keys(person_info.age)
+            self.element_is_visible(self.locators.SALARY_INPUT).send_keys(person_info.salary)
+            self.element_is_visible(self.locators.DEPARTMENT_INPUT).send_keys(person_info.department)
+            self.element_is_visible(self.locators.SUBMIT_BUTTON).click()
+
+            count-=1
+
+        return [person_info.firstname, person_info.lastname, str(person_info.age), 
+                person_info.email, str(person_info.salary), person_info.department]
+    
+    def check_added_person(self):
+        pass
