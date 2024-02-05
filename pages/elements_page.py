@@ -77,3 +77,8 @@ class WebTablePage(BasePage):
         
         return str(person_info.age)
         
+    def delete_person(self):
+        self.element_is_visible(self.locators.DELETE_BUTTON).click()
+
+    def check_person_deletion(self):
+        return self.element_is_present(self.locators.NO_ROWS_FOUND).text
