@@ -1,5 +1,6 @@
 import random
 from pages.elements_page import TextBoxPage, WebTablePage
+import time
 
 class TestElements:
     class TestTextBox:
@@ -36,3 +37,14 @@ class TestElements:
             searched_person = web_table_page.get_searched_person()
             
             assert keyword in searched_person, "the person was not found in the table"
+
+        def test_update_person(self, driver):
+            web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
+            web_table_page.open()
+
+            last_name = web_table_page.add_new_person()[1]
+            web_table_page.search_person(last_name)
+            age = web_table_page.update_person()
+            row = web_table_page.get_searched_person()
+            time.sleep(5)
+            assert age in row, "the person card has not been changed"
