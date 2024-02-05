@@ -31,3 +31,5 @@ class WebTablePageLocators:
     ROW_PARENT = ".//ancestor::div[@class='rt-tr-group']"
 
     UPDATE_BUTTON = (By.CSS_SELECTOR, "span[title='Edit']")
+    DELETE_BUTTON = (By.CSS_SELECTOR, "span[title='Delete']")
+    NO_ROWS_FOUND = (By.CSS_SELECTOR, "div[class='rt-noData']")
