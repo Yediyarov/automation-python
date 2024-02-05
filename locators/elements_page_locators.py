@@ -25,4 +25,4 @@ class WebTablePageLocators:
     DEPARTMENT_INPUT = (By.XPATH, "//input[@id='department']")
     SUBMIT_BUTTON = (By.XPATH, "//button[@id='submit']")
 
-    
+    FULL_PEOPLE_LIST = (By.CSS_SELECTOR, "div[class='rt-tr-group']")
