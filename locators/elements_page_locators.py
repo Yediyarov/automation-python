@@ -26,3 +26,6 @@ class WebTablePageLocators:
     SUBMIT_BUTTON = (By.XPATH, "//button[@id='submit']")
 
     FULL_PEOPLE_LIST = (By.CSS_SELECTOR, "div[class='rt-tr-group']")
+    SEARCH_INPUT = (By.XPATH, "//input[@id='searchBox']")
+    DELETE_BUTTON = (By.CSS_SELECTOR, "span[title='Delete']")
+    ROW_PARENT = ".//ancestor::div[@class='rt-tr-group']"
