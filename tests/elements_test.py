@@ -1,4 +1,4 @@
-from pages.elements_page import TextBoxPage
+from pages.elements_page import TextBoxPage, WebTablePage
 
 class TestElements:
     class TestTextBox:
@@ -15,3 +15,13 @@ class TestElements:
             assert current_address == output_cur_addr, "the current address does not match"
             assert permanent_address == output_per_addr, "the permanent address does not match"
 
+    class TestWebTable:
+
+        def test_web_table_add_person(self, driver):
+            web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
+            web_table_page.open()
+
+            new_person = web_table_page.add_new_person()
+            all_people = web_table_page.get_all_people()
+
+            assert new_person in all_people
