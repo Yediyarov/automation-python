@@ -33,3 +33,7 @@ class WebTablePageLocators:
     UPDATE_BUTTON = (By.CSS_SELECTOR, "span[title='Edit']")
     DELETE_BUTTON = (By.CSS_SELECTOR, "span[title='Delete']")
     NO_ROWS_FOUND = (By.CSS_SELECTOR, "div[class='rt-noData']")
+
+
+class LinksPageLocators:
+    SIMPLE_LINK = (By.CSS_SELECTOR, "a[id='simpleLink']")
