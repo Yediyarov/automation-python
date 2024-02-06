@@ -33,3 +33,14 @@ class WebTablePageLocators:
     UPDATE_BUTTON = (By.CSS_SELECTOR, "span[title='Edit']")
     DELETE_BUTTON = (By.CSS_SELECTOR, "span[title='Delete']")
     NO_ROWS_FOUND = (By.CSS_SELECTOR, "div[class='rt-noData']")
+
+
+
+class ButtonLocators:
+    DOUBLE_CLICK_BUTTON = (By.CSS_SELECTOR, 'button[id="doubleClickBtn"]')
+    RIGHT_CLICK_BUTTON = (By.CSS_SELECTOR, 'button[id="rightClickBtn"]')
+    LEFT_CLICK_BUTTON = (By.XPATH, "//div[3]/button[1]")
+
+    DOUBLE_CLICK_MESSAGE = (By.CSS_SELECTOR, 'p[id="doubleClickMessage"]')
+    RIGHT_CLICK_MESSAGE = (By.CSS_SELECTOR, 'p[id="rightClickMessage"]')
+    LEFT_CLICK_MESSAGE = (By.CSS_SELECTOR, 'p[id="dynamicClickMessage"]')
