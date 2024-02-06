@@ -1,5 +1,5 @@
 from generator.generator import generated_person
-from locators.elements_page_locators import TextBoxPageLocators, WebTablePageLocators
+from locators.elements_page_locators import ButtonLocators, TextBoxPageLocators, WebTablePageLocators
 from pages.base_page import BasePage
 
 class TextBoxPage(BasePage):
@@ -82,3 +82,19 @@ class WebTablePage(BasePage):
 
     def check_person_deletion(self):
         return self.element_is_present(self.locators.NO_ROWS_FOUND).text
+    
+
+class ButtonsPage(BasePage):
+    locators = ButtonLocators()
+
+    def double_click(self):
+        self.action_double_click(self.element_is_visible(self.locators.DOUBLE_CLICK_BUTTON))
+    
+    def right_click(self):
+        self.action_right_click(self.element_is_visible(self.locators.RIGHT_CLICK_BUTTON))
+
+    def left_click(self):
+        self.element_is_visible(self.locators.LEFT_CLICK_BUTTON).click()
+
+    def get_clicked_button_text(self, element):
+        return self.element_is_present(element).text
