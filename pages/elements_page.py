@@ -1,5 +1,6 @@
+import requests
 from generator.generator import generated_person
-from locators.elements_page_locators import TextBoxPageLocators, WebTablePageLocators
+from locators.elements_page_locators import LinksPageLocators, TextBoxPageLocators, WebTablePageLocators
 from pages.base_page import BasePage
 
 class TextBoxPage(BasePage):
@@ -82,3 +83,21 @@ class WebTablePage(BasePage):
 
     def check_person_deletion(self):
         return self.element_is_present(self.locators.NO_ROWS_FOUND).text
+    
+
+class LinksPage(BasePage):
+    locators = LinksPageLocators()
+
+    def check_new_tab_simple_link(self):
+        simple_link = self.element_is_visible(self.locators.SIMPLE_LINK)
+        link_href = simple_link.get_attribute('href')
+
+        response = requests.get(link_href)
+
+        if response.status_code == 200:
+            simple_link.click()
+            self.driver.switch_to.window(self.driver.window_handles[1])
+            url = self.driver.current_url
+            return link_href, url
+        else:
+            return link_href, response.status_code
