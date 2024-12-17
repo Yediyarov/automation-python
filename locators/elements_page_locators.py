@@ -33,3 +33,9 @@ class WebTablePageLocators:
     UPDATE_BUTTON = (By.CSS_SELECTOR, "span[title='Edit']")
     DELETE_BUTTON = (By.CSS_SELECTOR, "span[title='Delete']")
     NO_ROWS_FOUND = (By.CSS_SELECTOR, "div[class='rt-noData']")
+
+class UploadAndDownloadPageLocators:
+    UPLOAD_FILE = (By.CSS_SELECTOR, 'input[id="uploadFile"]')
+    UPLOADED_RESULT = (By.CSS_SELECTOR, 'p[id="uploadedFilePath"]')
+
+    DOWNLOAD_FILE = (By.CSS_SELECTOR, 'a[id="downloadButton"]')
