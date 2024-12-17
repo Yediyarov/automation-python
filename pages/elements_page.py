@@ -1,6 +1,10 @@
-from generator.generator import generated_person
-from locators.elements_page_locators import TextBoxPageLocators, WebTablePageLocators
+import base64
+import os
+import random
+from generator.generator import generate_file, generated_person
+from locators.elements_page_locators import TextBoxPageLocators, UploadAndDownloadPageLocators, WebTablePageLocators
 from pages.base_page import BasePage
+
 
 class TextBoxPage(BasePage):
     locators = TextBoxPageLocators()
@@ -16,9 +20,8 @@ class TextBoxPage(BasePage):
         self.element_is_visible(self.locators.CURRENT_ADDRESS).send_keys(current_address)
         self.element_is_visible(self.locators.PERMANENT_ADDRESS).send_keys(permanent_address)
         self.element_is_visible(self.locators.SUBMIT).click()
-       
-        return full_name, email, current_address, permanent_address
 
+        return full_name, email, current_address, permanent_address
 
     def check_filled_form(self):
         full_name = self.element_is_present(self.locators.CREATED_FULL_NAME).text.split(':')[1]
@@ -35,7 +38,7 @@ class WebTablePage(BasePage):
     def add_new_person(self, count=1):
         while count != 0:
             person_info = next(generated_person())
-            
+
             self.element_is_visible(self.locators.ADD_BUTTON).click()
             self.element_is_visible(self.locators.FIRST_NAME_INPUT).send_keys(person_info.firstname)
             self.element_is_visible(self.locators.LAST_NAME_INPUT).send_keys(person_info.lastname)
@@ -45,20 +48,20 @@ class WebTablePage(BasePage):
             self.element_is_visible(self.locators.DEPARTMENT_INPUT).send_keys(person_info.department)
             self.element_is_visible(self.locators.SUBMIT_BUTTON).click()
 
-            count-=1
+            count -= 1
 
-        return [person_info.firstname, person_info.lastname, str(person_info.age), 
+        return [person_info.firstname, person_info.lastname, str(person_info.age),
                 person_info.email, str(person_info.salary), person_info.department]
-    
+
     def get_all_people(self):
         all_people = self.elements_are_present(self.locators.FULL_PEOPLE_LIST)
         data = []
-        
+
         for person in all_people:
             data.append(person.text.splitlines())
 
         return data
-    
+
     def search_person(self, keyword):
         self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(keyword)
 
@@ -66,7 +69,7 @@ class WebTablePage(BasePage):
         delete_button = self.element_is_present(self.locators.DELETE_BUTTON)
         row = delete_button.find_element("xpath", self.locators.ROW_PARENT)
         return row.text.splitlines()
-    
+
     def update_person(self):
         person_info = next(generated_person())
 
@@ -74,11 +77,35 @@ class WebTablePage(BasePage):
         self.element_is_visible(self.locators.AGE_INPUT).clear()
         self.element_is_visible(self.locators.AGE_INPUT).send_keys(person_info.age)
         self.element_is_visible(self.locators.SUBMIT_BUTTON).click()
-        
+
         return str(person_info.age)
-        
+
     def delete_person(self):
         self.element_is_visible(self.locators.DELETE_BUTTON).click()
 
     def check_person_deletion(self):
         return self.element_is_present(self.locators.NO_ROWS_FOUND).text
+
+
+class FileUploadDownloadPage(BasePage):
+    locators = UploadAndDownloadPageLocators()
+
+    def upload_file(self):
+        filename, path = generate_file()
+        print(filename, path)
+        self.element_is_present(self.locators.UPLOAD_FILE).send_keys(path)
+        os.remove(path)
+        text = self.element_is_present(self.locators.UPLOADED_RESULT).text
+        return filename.split('\\')[-1], text.split('\\')[-1]
+
+    def download_file(self):
+        link = self.element_is_present(self.locators.DOWNLOAD_FILE).get_attribute('href')
+        link_b = base64.b64decode(link)
+        path_name_file = rf'E:\automation_qa_course\filetest{random.randint(0, 999)}.jpg'
+        with open(path_name_file, 'wb+') as f:
+            offset = link_b.find(b'\xff\xd8')
+            f.write(link_b[offset:])
+            check_file = os.path.exists(path_name_file)
+            f.close()
+        os.remove(path_name_file)
+        return check_file
