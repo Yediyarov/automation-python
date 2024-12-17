@@ -92,11 +92,10 @@ class FileUploadDownloadPage(BasePage):
 
     def upload_file(self):
         filename, path = generate_file()
-        print(filename, path)
         self.element_is_present(self.locators.UPLOAD_FILE).send_keys(path)
         os.remove(path)
         text = self.element_is_present(self.locators.UPLOADED_RESULT).text
-        return filename.split('\\')[-1], text.split('\\')[-1]
+        return filename.split('/')[-1], text.split('\\')[-1]
 
     def download_file(self):
         link = self.element_is_present(self.locators.DOWNLOAD_FILE).get_attribute('href')
