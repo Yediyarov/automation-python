@@ -1,9 +1,10 @@
 import base64
 import os
-import random
 from generator.generator import generate_file, generated_person
 from locators.elements_page_locators import TextBoxPageLocators, UploadAndDownloadPageLocators, WebTablePageLocators
 from pages.base_page import BasePage
+from datetime import datetime
+
 
 
 class TextBoxPage(BasePage):
@@ -99,12 +100,16 @@ class FileUploadDownloadPage(BasePage):
 
     def download_file(self):
         link = self.element_is_present(self.locators.DOWNLOAD_FILE).get_attribute('href')
-        link_b = base64.b64decode(link)
-        path_name_file = rf'E:\automation_qa_course\filetest{random.randint(0, 999)}.jpg'
-        with open(path_name_file, 'wb+') as f:
-            offset = link_b.find(b'\xff\xd8')
-            f.write(link_b[offset:])
-            check_file = os.path.exists(path_name_file)
-            f.close()
-        os.remove(path_name_file)
+        # define filename and filepath
+        file_name = f"downloaded_image_{datetime.now().strftime('%Y%m%d%H%M%S')}.jpeg"
+        file_path = os.path.join(os.getcwd(), file_name)
+
+        base64_data = link.split(",")[1]
+        decoded_data = base64.b64decode(base64_data)
+
+        with open(file_path, "wb") as file:
+            file.write(decoded_data)
+            check_file = os.path.exists(file_path)
+        if os.path.exists(file_path):
+            os.remove(file_path)
         return check_file
