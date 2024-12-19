@@ -1,5 +1,5 @@
 import random
-from pages.elements_page import TextBoxPage, WebTablePage
+from pages.elements_page import TextBoxPage, WebTablePage, DynamicPropertiesPage
 import time
 
 class TestElements:
@@ -61,3 +61,10 @@ class TestElements:
             text = web_table_page.check_person_deletion()
 
             assert text == 'No rows found'
+
+    class TestDynamicPropertiesPage:
+        def test_enable_button(self, driver):
+            dynamic_properties_page = DynamicPropertiesPage(driver, 'https://demoqa.com/dynamic-properties')
+            dynamic_properties_page.open()
+            enable = dynamic_properties_page.check_enable_button()
+            assert enable is True, 'Button did not enable after 5 second'
