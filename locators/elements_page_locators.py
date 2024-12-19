@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
-   
+
+
 class TextBoxPageLocators:
     # form fields
     FULL_NAME = (By.CSS_SELECTOR, "input[id='userName']")
@@ -33,3 +34,9 @@ class WebTablePageLocators:
     UPDATE_BUTTON = (By.CSS_SELECTOR, "span[title='Edit']")
     DELETE_BUTTON = (By.CSS_SELECTOR, "span[title='Delete']")
     NO_ROWS_FOUND = (By.CSS_SELECTOR, "div[class='rt-noData']")
+
+
+class DynamicPropertiesPageLocators:
+    COLOR_CHANGE_BUTTON = (By.CSS_SELECTOR, 'button[id="colorChange"]')
+    VISIBLE_AFTER_FIVE_SEC_BUTTON = (By.CSS_SELECTOR, 'button[id="visibleAfter"]')
+    ENABLE_BUTTON = (By.CSS_SELECTOR, 'button[id="enableAfter"]')
