@@ -43,7 +43,6 @@ class CheckBoxPage(BasePage):
     def open_full_list(self):
         self.element_is_visible(self.locators.EXPAND_ALL_BUTTON).click()
 
-
     def click_random_checkbox(self):
         item_list = self.elements_are_visible(self.locators.ITEM_LIST)
         count = 21
@@ -56,7 +55,6 @@ class CheckBoxPage(BasePage):
             else:
                 break
 
-    
     def get_checked_checkboxes(self):
         checked_list = self.elements_are_present(self.locators.CHECKED_ITEMS)
         data = []
@@ -64,7 +62,6 @@ class CheckBoxPage(BasePage):
             title_item = box.find_element_by_xpath(self.locators.TITLE_ITEM)
             data.append(title_item.text)
         return str(data).replace(' ', '').replace('doc', '').replace('.', '').lower()
-
 
     def get_output_result(self):
         result_list = self.elements_are_present(self.locators.OUTPUT_RESULT)
@@ -74,10 +71,8 @@ class CheckBoxPage(BasePage):
         return str(data).replace(' ', '').lower()
 
 
-
 class RadioButtonPage(BasePage):
     locators = RadioButtonPageLocators()
-
 
     def click_on_the_radio_button(self, choice):
         choices = {'yes': self.locators.YES_RADIOBUTTON,
@@ -85,9 +80,9 @@ class RadioButtonPage(BasePage):
                    'no': self.locators.NO_RADIOBUTTON}
         self.element_is_visible(choices[choice]).click()
 
-
     def get_output_result(self):
         return self.element_is_present(self.locators.OUTPUT_RESULT).text
+
 
 class WebTablePage(BasePage):
     locators = WebTablePageLocators()
@@ -141,7 +136,8 @@ class WebTablePage(BasePage):
         self.element_is_visible(self.locators.DELETE_BUTTON).click()
 
     def check_person_deletion(self):
-        return self.element_is_present(self.locators.NO_ROWS_FOUND).text    
+        return self.element_is_present(self.locators.NO_ROWS_FOUND).text
+
 
 class LinksPage(BasePage):
     locators = LinksPageLocators()
@@ -186,8 +182,8 @@ class FileUploadDownloadPage(BasePage):
         if os.path.exists(file_path):
             os.remove(file_path)
         return check_file
-      
-      
+
+
 class DynamicPropertiesPage(BasePage):
     locators = DynamicPropertiesPageLocators
 
@@ -210,14 +206,15 @@ class DynamicPropertiesPage(BasePage):
             self.element_is_visible(self.locators.VISIBLE_AFTER_FIVE_SEC_BUTTON)
         except TimeoutException:
             return False
-        return True    
+        return True
+
 
 class ButtonsPage(BasePage):
     locators = ButtonLocators()
 
     def double_click(self):
         self.action_double_click(self.element_is_visible(self.locators.DOUBLE_CLICK_BUTTON))
-    
+
     def right_click(self):
         self.action_right_click(self.element_is_visible(self.locators.RIGHT_CLICK_BUTTON))
 
@@ -226,4 +223,3 @@ class ButtonsPage(BasePage):
 
     def get_clicked_button_text(self, element):
         return self.element_is_present(element).text
-      
