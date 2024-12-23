@@ -1,3 +1,4 @@
+import os
 import random
 
 from data.data import Person
@@ -20,3 +21,12 @@ def generated_person():
         permanent_address=fake_en.address(),
         mobile=fake_en.msisdn(),
     )
+
+    
+def generate_file():
+    current_directory = os.getcwd()
+    path = os.path.join(current_directory, f'{random.randint(0,999)}.txt')
+    file = open(path, 'w')
+    file.write(f'Hello World{random.randint(0, 999)}')
+    file.close()
+    return file.name, path
