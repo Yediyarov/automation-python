@@ -22,7 +22,7 @@ def generated_person():
         mobile=fake_en.msisdn(),
     )
 
-
+    
 def generate_file():
     current_directory = os.getcwd()
     path = os.path.join(current_directory, f'{random.randint(0,999)}.txt')

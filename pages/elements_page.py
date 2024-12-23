@@ -1,10 +1,11 @@
-import time
-
-from selenium.common import TimeoutException
-
-from generator.generator import generated_person
-from locators.elements_page_locators import TextBoxPageLocators, WebTablePageLocators, DynamicPropertiesPageLocators, ButtonLocators, TextBoxPageLocators, WebTablePageLocators, CheckBoxPageLocators, RadioButtonPageLocators, TextBoxPageLocators
+import base64
+import os
+from generator.generator import generate_file, generated_person
+from locators.elements_page_locators import *
 from pages.base_page import BasePage
+from datetime import datetime
+import time
+from selenium.common import TimeoutException
 import random
 
 
@@ -141,6 +142,33 @@ class WebTablePage(BasePage):
         return self.element_is_present(self.locators.NO_ROWS_FOUND).text
 
 
+class FileUploadDownloadPage(BasePage):
+    locators = UploadAndDownloadPageLocators()
+
+    def upload_file(self):
+        filename, path = generate_file()
+        self.element_is_present(self.locators.UPLOAD_FILE).send_keys(path)
+        os.remove(path)
+        text = self.element_is_present(self.locators.UPLOADED_RESULT).text
+        return filename.split('/')[-1], text.split('\\')[-1]
+
+    def download_file(self):
+        link = self.element_is_present(self.locators.DOWNLOAD_FILE).get_attribute('href')
+        # define filename and filepath
+        file_name = f"downloaded_image_{datetime.now().strftime('%Y%m%d%H%M%S')}.jpeg"
+        file_path = os.path.join(os.getcwd(), file_name)
+
+        base64_data = link.split(",")[1]
+        decoded_data = base64.b64decode(base64_data)
+
+        with open(file_path, "wb") as file:
+            file.write(decoded_data)
+            check_file = os.path.exists(file_path)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        return check_file
+      
+      
 class DynamicPropertiesPage(BasePage):
     locators = DynamicPropertiesPageLocators
 
