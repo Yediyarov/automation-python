@@ -1,3 +1,5 @@
+import requests
+from locators.elements_page_locators import *
 import base64
 import os
 from generator.generator import generate_file, generated_person
@@ -139,7 +141,24 @@ class WebTablePage(BasePage):
         self.element_is_visible(self.locators.DELETE_BUTTON).click()
 
     def check_person_deletion(self):
-        return self.element_is_present(self.locators.NO_ROWS_FOUND).text
+        return self.element_is_present(self.locators.NO_ROWS_FOUND).text    
+
+class LinksPage(BasePage):
+    locators = LinksPageLocators()
+
+    def check_new_tab_simple_link(self):
+        simple_link = self.element_is_visible(self.locators.SIMPLE_LINK)
+        link_href = simple_link.get_attribute('href')
+
+        response = requests.get(link_href)
+
+        if response.status_code == 200:
+            simple_link.click()
+            self.driver.switch_to.window(self.driver.window_handles[1])
+            url = self.driver.current_url
+            return link_href, url
+        else:
+            return link_href, response.status_code
 
 
 class FileUploadDownloadPage(BasePage):

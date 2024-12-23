@@ -50,6 +50,9 @@ class WebTablePageLocators:
     NO_ROWS_FOUND = (By.CSS_SELECTOR, "div[class='rt-noData']")
 
 
+class LinksPageLocators:
+    SIMPLE_LINK = (By.CSS_SELECTOR, "a[id='simpleLink']")
+
 class UploadAndDownloadPageLocators:
     UPLOAD_FILE = (By.CSS_SELECTOR, 'input[id="uploadFile"]')
     UPLOADED_RESULT = (By.CSS_SELECTOR, 'p[id="uploadedFilePath"]')
@@ -70,4 +73,3 @@ class ButtonLocators:
     RIGHT_CLICK_MESSAGE = (By.CSS_SELECTOR, 'p[id="rightClickMessage"]')
     LEFT_CLICK_MESSAGE = (By.CSS_SELECTOR, 'p[id="dynamicClickMessage"]')
     
-

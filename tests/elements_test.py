@@ -88,6 +88,16 @@ class TestElements:
             text = web_table_page.check_person_deletion()
 
             assert text == 'No rows found'
+   
+    class TestLinks:
+
+        def test_check_link(self, driver):
+            links_page = LinksPage(driver, "https://demoqa.com/links")
+            links_page.open()
+
+            href_link, current_url = links_page.check_new_tab_simple_link()
+
+            assert href_link == current_url, "the link is broken or url is incorrect"
 
     class TestFileUploadDownload:
 
