@@ -1,5 +1,6 @@
 import random
-from pages.elements_page import TextBoxPage, WebTablePage, DynamicPropertiesPage
+from pages.elements_page import TextBoxPage, WebTablePage, DynamicPropertiesPage, ButtonLocators
+from pages.elements_page import ButtonsPage, TextBoxPage, WebTablePage
 import time
 
 class TestElements:
@@ -80,3 +81,38 @@ class TestElements:
             dynamic_properties_page.open()
             appear = dynamic_properties_page.check_appear_of_button()
             assert appear is True, 'button did not appear after 5 second'
+    
+    
+    class TestButtons:
+        locators = ButtonLocators()
+            
+        def test_button_double_click(self, driver):
+            button_page = ButtonsPage(driver, "https://demoqa.com/buttons")
+            button_page.open()
+
+            button_page.double_click()
+
+            double_click_message = button_page.get_clicked_button_text(self.locators.DOUBLE_CLICK_MESSAGE)
+
+            assert double_click_message == "You have done a double click",  "The double click button was not pressed"
+
+        def test_button_right_click(self, driver):
+            button_page = ButtonsPage(driver, "https://demoqa.com/buttons")
+            button_page.open()
+
+            button_page.right_click()
+
+            right_click_message = button_page.get_clicked_button_text(self.locators.RIGHT_CLICK_MESSAGE)
+
+            assert right_click_message == "You have done a right click",  "The right click button was not pressed"
+
+        def test_button_left_click(self, driver):
+            button_page = ButtonsPage(driver, "https://demoqa.com/buttons")
+            button_page.open()
+
+            button_page.left_click()
+
+            left_click_message = button_page.get_clicked_button_text(self.locators.LEFT_CLICK_MESSAGE)
+
+            assert left_click_message == "You have done a dynamic click",  "The left click button was not pressed"
+            

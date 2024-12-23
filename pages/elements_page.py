@@ -3,7 +3,7 @@ import time
 from selenium.common import TimeoutException
 
 from generator.generator import generated_person
-from locators.elements_page_locators import TextBoxPageLocators, WebTablePageLocators, DynamicPropertiesPageLocators
+from locators.elements_page_locators import TextBoxPageLocators, WebTablePageLocators, DynamicPropertiesPageLocators, ButtonLocators, TextBoxPageLocators, WebTablePageLocators
 from pages.base_page import BasePage
 
 
@@ -110,4 +110,20 @@ class DynamicPropertiesPage(BasePage):
             self.element_is_visible(self.locators.VISIBLE_AFTER_FIVE_SEC_BUTTON)
         except TimeoutException:
             return False
-        return True
+        return True    
+
+class ButtonsPage(BasePage):
+    locators = ButtonLocators()
+
+    def double_click(self):
+        self.action_double_click(self.element_is_visible(self.locators.DOUBLE_CLICK_BUTTON))
+    
+    def right_click(self):
+        self.action_right_click(self.element_is_visible(self.locators.RIGHT_CLICK_BUTTON))
+
+    def left_click(self):
+        self.element_is_visible(self.locators.LEFT_CLICK_BUTTON).click()
+
+    def get_clicked_button_text(self, element):
+        return self.element_is_present(element).text
+      
