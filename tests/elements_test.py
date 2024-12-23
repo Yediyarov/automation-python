@@ -1,5 +1,5 @@
 import random
-from locators.elements_page_locators import ButtonLocators
+from pages.elements_page import TextBoxPage, WebTablePage, DynamicPropertiesPage, ButtonLocators
 from pages.elements_page import ButtonsPage, TextBoxPage, WebTablePage
 import time
 
@@ -63,6 +63,26 @@ class TestElements:
 
             assert text == 'No rows found'
 
+    class TestDynamicPropertiesPage:
+        def test_enable_button(self, driver):
+            dynamic_properties_page = DynamicPropertiesPage(driver, 'https://demoqa.com/dynamic-properties')
+            dynamic_properties_page.open()
+            enable = dynamic_properties_page.check_enable_button()
+            assert enable is True, 'Button did not enable after 5 second'
+
+        def test_dynamic_properties(self, driver):
+            dynamic_properties_page = DynamicPropertiesPage(driver, 'https://demoqa.com/dynamic-properties')
+            dynamic_properties_page.open()
+            color_before, color_after = dynamic_properties_page.check_changed_of_color()
+            assert color_after != color_before, 'colors have not been changed'
+
+        def test_appear_button(self, driver):
+            dynamic_properties_page = DynamicPropertiesPage(driver, 'https://demoqa.com/dynamic-properties')
+            dynamic_properties_page.open()
+            appear = dynamic_properties_page.check_appear_of_button()
+            assert appear is True, 'button did not appear after 5 second'
+    
+    
     class TestButtons:
         locators = ButtonLocators()
             
@@ -95,3 +115,4 @@ class TestElements:
             left_click_message = button_page.get_clicked_button_text(self.locators.LEFT_CLICK_MESSAGE)
 
             assert left_click_message == "You have done a dynamic click",  "The left click button was not pressed"
+            

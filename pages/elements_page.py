@@ -1,6 +1,11 @@
+import time
+
+from selenium.common import TimeoutException
+
 from generator.generator import generated_person
-from locators.elements_page_locators import ButtonLocators, TextBoxPageLocators, WebTablePageLocators
+from locators.elements_page_locators import TextBoxPageLocators, WebTablePageLocators, DynamicPropertiesPageLocators, ButtonLocators, TextBoxPageLocators, WebTablePageLocators
 from pages.base_page import BasePage
+
 
 class TextBoxPage(BasePage):
     locators = TextBoxPageLocators()
@@ -16,9 +21,8 @@ class TextBoxPage(BasePage):
         self.element_is_visible(self.locators.CURRENT_ADDRESS).send_keys(current_address)
         self.element_is_visible(self.locators.PERMANENT_ADDRESS).send_keys(permanent_address)
         self.element_is_visible(self.locators.SUBMIT).click()
-       
-        return full_name, email, current_address, permanent_address
 
+        return full_name, email, current_address, permanent_address
 
     def check_filled_form(self):
         full_name = self.element_is_present(self.locators.CREATED_FULL_NAME).text.split(':')[1]
@@ -35,7 +39,7 @@ class WebTablePage(BasePage):
     def add_new_person(self, count=1):
         while count != 0:
             person_info = next(generated_person())
-            
+
             self.element_is_visible(self.locators.ADD_BUTTON).click()
             self.element_is_visible(self.locators.FIRST_NAME_INPUT).send_keys(person_info.firstname)
             self.element_is_visible(self.locators.LAST_NAME_INPUT).send_keys(person_info.lastname)
@@ -45,20 +49,20 @@ class WebTablePage(BasePage):
             self.element_is_visible(self.locators.DEPARTMENT_INPUT).send_keys(person_info.department)
             self.element_is_visible(self.locators.SUBMIT_BUTTON).click()
 
-            count-=1
+            count -= 1
 
-        return [person_info.firstname, person_info.lastname, str(person_info.age), 
+        return [person_info.firstname, person_info.lastname, str(person_info.age),
                 person_info.email, str(person_info.salary), person_info.department]
-    
+
     def get_all_people(self):
         all_people = self.elements_are_present(self.locators.FULL_PEOPLE_LIST)
         data = []
-        
+
         for person in all_people:
             data.append(person.text.splitlines())
 
         return data
-    
+
     def search_person(self, keyword):
         self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(keyword)
 
@@ -66,7 +70,7 @@ class WebTablePage(BasePage):
         delete_button = self.element_is_present(self.locators.DELETE_BUTTON)
         row = delete_button.find_element("xpath", self.locators.ROW_PARENT)
         return row.text.splitlines()
-    
+
     def update_person(self):
         person_info = next(generated_person())
 
@@ -74,15 +78,39 @@ class WebTablePage(BasePage):
         self.element_is_visible(self.locators.AGE_INPUT).clear()
         self.element_is_visible(self.locators.AGE_INPUT).send_keys(person_info.age)
         self.element_is_visible(self.locators.SUBMIT_BUTTON).click()
-        
+
         return str(person_info.age)
-        
+
     def delete_person(self):
         self.element_is_visible(self.locators.DELETE_BUTTON).click()
 
     def check_person_deletion(self):
         return self.element_is_present(self.locators.NO_ROWS_FOUND).text
-    
+
+
+class DynamicPropertiesPage(BasePage):
+    locators = DynamicPropertiesPageLocators
+
+    def check_enable_button(self):
+        try:
+            self.element_is_clickable(self.locators.ENABLE_BUTTON)
+        except TimeoutException:
+            return False
+        return True
+
+    def check_changed_of_color(self):
+        color_button = self.element_is_present(self.locators.COLOR_CHANGE_BUTTON)
+        color_button_before = color_button.value_of_css_property('color')
+        time.sleep(5)
+        color_button_after = color_button.value_of_css_property('color')
+        return color_button_before, color_button_after
+
+    def check_appear_of_button(self):
+        try:
+            self.element_is_visible(self.locators.VISIBLE_AFTER_FIVE_SEC_BUTTON)
+        except TimeoutException:
+            return False
+        return True    
 
 class ButtonsPage(BasePage):
     locators = ButtonLocators()
@@ -98,3 +126,4 @@ class ButtonsPage(BasePage):
 
     def get_clicked_button_text(self, element):
         return self.element_is_present(element).text
+      
