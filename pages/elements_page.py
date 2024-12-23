@@ -1,10 +1,12 @@
 import base64
 import os
 from generator.generator import generate_file, generated_person
-from locators.elements_page_locators import TextBoxPageLocators, UploadAndDownloadPageLocators, WebTablePageLocators
+from locators.elements_page_locators import *
 from pages.base_page import BasePage
 from datetime import datetime
-
+import time
+from selenium.common import TimeoutException
+import random
 
 
 class TextBoxPage(BasePage):
@@ -32,6 +34,58 @@ class TextBoxPage(BasePage):
 
         return full_name, email, current_address, permanent_address
 
+
+class CheckBoxPage(BasePage):
+    locators = CheckBoxPageLocators()
+
+    def open_full_list(self):
+        self.element_is_visible(self.locators.EXPAND_ALL_BUTTON).click()
+
+
+    def click_random_checkbox(self):
+        item_list = self.elements_are_visible(self.locators.ITEM_LIST)
+        count = 21
+        while count != 0:
+            item = item_list[random.randint(1, 15)]
+            if count > 0:
+                self.go_to_element(item)
+                item.click()
+                count -= 1
+            else:
+                break
+
+    
+    def get_checked_checkboxes(self):
+        checked_list = self.elements_are_present(self.locators.CHECKED_ITEMS)
+        data = []
+        for box in checked_list:
+            title_item = box.find_element_by_xpath(self.locators.TITLE_ITEM)
+            data.append(title_item.text)
+        return str(data).replace(' ', '').replace('doc', '').replace('.', '').lower()
+
+
+    def get_output_result(self):
+        result_list = self.elements_are_present(self.locators.OUTPUT_RESULT)
+        data = []
+        for item in result_list:
+            data.append(item.text)
+        return str(data).replace(' ', '').lower()
+
+
+
+class RadioButtonPage(BasePage):
+    locators = RadioButtonPageLocators()
+
+
+    def click_on_the_radio_button(self, choice):
+        choices = {'yes': self.locators.YES_RADIOBUTTON,
+                   'impressive': self.locators.IMPRESSIVE_RADIOBUTTON,
+                   'no': self.locators.NO_RADIOBUTTON}
+        self.element_is_visible(choices[choice]).click()
+
+
+    def get_output_result(self):
+        return self.element_is_present(self.locators.OUTPUT_RESULT).text
 
 class WebTablePage(BasePage):
     locators = WebTablePageLocators()
@@ -113,3 +167,44 @@ class FileUploadDownloadPage(BasePage):
         if os.path.exists(file_path):
             os.remove(file_path)
         return check_file
+      
+      
+class DynamicPropertiesPage(BasePage):
+    locators = DynamicPropertiesPageLocators
+
+    def check_enable_button(self):
+        try:
+            self.element_is_clickable(self.locators.ENABLE_BUTTON)
+        except TimeoutException:
+            return False
+        return True
+
+    def check_changed_of_color(self):
+        color_button = self.element_is_present(self.locators.COLOR_CHANGE_BUTTON)
+        color_button_before = color_button.value_of_css_property('color')
+        time.sleep(5)
+        color_button_after = color_button.value_of_css_property('color')
+        return color_button_before, color_button_after
+
+    def check_appear_of_button(self):
+        try:
+            self.element_is_visible(self.locators.VISIBLE_AFTER_FIVE_SEC_BUTTON)
+        except TimeoutException:
+            return False
+        return True    
+
+class ButtonsPage(BasePage):
+    locators = ButtonLocators()
+
+    def double_click(self):
+        self.action_double_click(self.element_is_visible(self.locators.DOUBLE_CLICK_BUTTON))
+    
+    def right_click(self):
+        self.action_right_click(self.element_is_visible(self.locators.RIGHT_CLICK_BUTTON))
+
+    def left_click(self):
+        self.element_is_visible(self.locators.LEFT_CLICK_BUTTON).click()
+
+    def get_clicked_button_text(self, element):
+        return self.element_is_present(element).text
+      
