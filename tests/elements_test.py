@@ -1,4 +1,6 @@
-from pages.elements_page import CheckBoxPage, RadioButtonPage, TextBoxPage
+import random
+from pages.elements_page import TextBoxPage, WebTablePage, DynamicPropertiesPage, ButtonLocators, CheckBoxPage, RadioButtonPage, TextBoxPage
+import time
 
 class TestElements:
     class TestTextBox:
@@ -39,3 +41,103 @@ class TestElements:
             assert output_yes == 'Yes', "'Yes' have not been selected"
             assert output_impressive == 'Impressive', "'Impressive' have not been selected"
             assert output_no == "No", "'No' have not been selected"
+            
+            
+    class TestWebTable:
+
+        def test_web_table_add_person(self, driver):
+            web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
+            web_table_page.open()
+
+            new_person = web_table_page.add_new_person()
+            all_people = web_table_page.get_all_people()
+
+            assert new_person in all_people
+            
+        def test_web_table_search_person(self, driver):
+            web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
+            web_table_page.open()
+
+            keyword = web_table_page.add_new_person()[random.randint(0,5)]
+            web_table_page.search_person(keyword)
+            searched_person = web_table_page.get_searched_person()
+            
+            assert keyword in searched_person, "the person was not found in the table"
+
+        def test_update_person(self, driver):
+            web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
+            web_table_page.open()
+
+            last_name = web_table_page.add_new_person()[1]
+            web_table_page.search_person(last_name)
+            age = web_table_page.update_person()
+            row = web_table_page.get_searched_person()
+            time.sleep(5)
+            assert age in row, "the person card has not been changed"
+
+        def test_delete_person(self, driver):
+            web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
+            web_table_page.open()
+
+            email = web_table_page.add_new_person()[3]
+            web_table_page.search_person(email)
+
+            web_table_page.delete_person()
+
+            text = web_table_page.check_person_deletion()
+
+            assert text == 'No rows found'
+
+    class TestDynamicPropertiesPage:
+        def test_enable_button(self, driver):
+            dynamic_properties_page = DynamicPropertiesPage(driver, 'https://demoqa.com/dynamic-properties')
+            dynamic_properties_page.open()
+            enable = dynamic_properties_page.check_enable_button()
+            assert enable is True, 'Button did not enable after 5 second'
+
+        def test_dynamic_properties(self, driver):
+            dynamic_properties_page = DynamicPropertiesPage(driver, 'https://demoqa.com/dynamic-properties')
+            dynamic_properties_page.open()
+            color_before, color_after = dynamic_properties_page.check_changed_of_color()
+            assert color_after != color_before, 'colors have not been changed'
+
+        def test_appear_button(self, driver):
+            dynamic_properties_page = DynamicPropertiesPage(driver, 'https://demoqa.com/dynamic-properties')
+            dynamic_properties_page.open()
+            appear = dynamic_properties_page.check_appear_of_button()
+            assert appear is True, 'button did not appear after 5 second'
+    
+    
+    class TestButtons:
+        locators = ButtonLocators()
+            
+        def test_button_double_click(self, driver):
+            button_page = ButtonsPage(driver, "https://demoqa.com/buttons")
+            button_page.open()
+
+            button_page.double_click()
+
+            double_click_message = button_page.get_clicked_button_text(self.locators.DOUBLE_CLICK_MESSAGE)
+
+            assert double_click_message == "You have done a double click",  "The double click button was not pressed"
+
+        def test_button_right_click(self, driver):
+            button_page = ButtonsPage(driver, "https://demoqa.com/buttons")
+            button_page.open()
+
+            button_page.right_click()
+
+            right_click_message = button_page.get_clicked_button_text(self.locators.RIGHT_CLICK_MESSAGE)
+
+            assert right_click_message == "You have done a right click",  "The right click button was not pressed"
+
+        def test_button_left_click(self, driver):
+            button_page = ButtonsPage(driver, "https://demoqa.com/buttons")
+            button_page.open()
+
+            button_page.left_click()
+
+            left_click_message = button_page.get_clicked_button_text(self.locators.LEFT_CLICK_MESSAGE)
+
+            assert left_click_message == "You have done a dynamic click",  "The left click button was not pressed"
+            
