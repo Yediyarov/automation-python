@@ -88,7 +88,8 @@ class RadioButtonPage(BasePage):
         choices = {'yes': self.locators.YES_RADIOBUTTON,
                    'impressive': self.locators.IMPRESSIVE_RADIOBUTTON,
                    'no': self.locators.NO_RADIOBUTTON}
-        self.element_is_visible(choices[choice]).click()
+        button = self.element_is_visible(choices[choice])
+        button.click()
 
     @allure.step('Get output result')
     def get_output_result(self):
